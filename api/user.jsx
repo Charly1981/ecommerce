@@ -15,7 +15,7 @@ export async function registerApi(formData) {
     return result;
   } catch (error) {
     console.log(error);
-    return nul;
+    return null;
   }
 }
 
