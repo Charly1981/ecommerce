@@ -51,6 +51,7 @@ export async function resetPasswordApi(email) {
     };
     console.log(url);
     console.log(email);
+    console.log(params);
     const response = await fetch(url, params);
     const result = await response.json();
     console.log(result);
@@ -65,6 +66,27 @@ export async function getMeApi(logout) {
   try {
     const url = `${BASE_PATH}/users/me`;
     const result = await authFetch(url, null, logout);
+    return result ? result : null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function updateNameApi(idUser, data, logout) {
+  try {
+    console.log(data);
+    const url = `${BASE_PATH}/users/${idUser}`;
+    const params = {
+      method: "PUT",
+      header: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+    console.log(params);
+    const result = await authFetch(url, params, logout);
+    console.log(result);
     return result ? result : null;
   } catch (error) {
     console.log(error);
