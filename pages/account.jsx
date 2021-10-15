@@ -5,6 +5,8 @@ import useAuth from "../hooks/useAuth";
 import { getMeApi } from "../api/user";
 import { route } from "next/dist/server/router";
 import ChangeNameForm from "../components/Account/ChangeNameForm/ChangeNameForm";
+import ChangeEmailForm from "../components/Account/ChangeEmailForm";
+import ChangePasswordForm from "../components/Account/ChangePasswordForm";
 
 export default function Account() {
   const [user, setUser] = useState(undefined);
@@ -36,12 +38,22 @@ export default function Account() {
 }
 
 function Configuration(props) {
-  const { user, logout } = props;
+  const { user, logout, setReloadUser } = props;
   return (
     <div className="account__configuration">
       <div className="title">Configuración</div>
       <div className="data">
-        <ChangeNameForm user={user} logout={logout} />
+        <ChangeNameForm
+          user={user}
+          logout={logout}
+          setReloadUser={setReloadUser}
+        />
+        <ChangeEmailForm
+          user={user}
+          logout={logout}
+          setReloadUser={setReloadUser}
+        />
+        <ChangePasswordForm user={user} logout={logout} />
       </div>
     </div>
   );

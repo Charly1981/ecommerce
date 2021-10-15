@@ -44,7 +44,7 @@ export async function resetPasswordApi(email) {
     const url = `${BASE_PATH}/auth/forgot-password`;
     const params = {
       method: "POST",
-      header: {
+      headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email }),
@@ -79,14 +79,48 @@ export async function updateNameApi(idUser, data, logout) {
     const url = `${BASE_PATH}/users/${idUser}`;
     const params = {
       method: "PUT",
-      header: {
+      headers: {
         "Content-type": "application/json",
       },
       body: JSON.stringify(data),
     };
-    console.log(params);
     const result = await authFetch(url, params, logout);
-    console.log(result);
+    return result ? result : null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function updateEmailApi(idUser, email, logout) {
+  try {
+    const url = `${BASE_PATH}/users/${idUser}`;
+    const params = {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    };
+    const result = await authFetch(url, params, logout);
+    return result ? result : null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function updatePasswordApi(idUser, password, logout) {
+  try {
+    const url = `${BASE_PATH}/users/${idUser}`;
+    const params = {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ password }),
+    };
+    const result = await authFetch(url, params, logout);
     return result ? result : null;
   } catch (error) {
     console.log(error);
