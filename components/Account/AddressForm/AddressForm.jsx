@@ -25,8 +25,6 @@ export default function AddressForm(props) {
       ...formData,
       user: auth.idUser,
     };
-    console.log("ESTOY MANDANDO A CREATEADD");
-    console.log(formDataTemp);
     const response = await createAddressApi(formDataTemp, logout);
     if (!response) {
       toast.warning("Error al crear la dirección");
