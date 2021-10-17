@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Button } from "semantic-ui-react";
-import { getAddressesApi } from "../../../api/address";
+import { getAddressApi, deleteAddressApi } from "../../../api/address";
 import useAuth from "../../../hooks/useAuth";
 import { map, size } from "lodash";
 
 export default function ListAddress(props) {
+  const { reloadAddresses, setReloadAddresses, openModal } = props;
   const [addresses, setAddresses] = useState(null);
   const { auth, logout } = useAuth();
-  const { reloadAddresses, setReloadAddresses } = props;
 
   useEffect(() => {
     (async () => {
-      const response = await getAddressesApi(auth.idUser, logout);
+      const response = await getAddressApi(auth.idUser, logout);
       setAddresses(response || []);
       setReloadAddresses(false);
     })();
@@ -27,7 +27,12 @@ export default function ListAddress(props) {
         <Grid>
           {map(addresses, (address) => (
             <Grid.Column key={address.id} mobile={16} tablet={8} computer={4}>
-              <Address address={address} />
+              <Address
+                address={address}
+                logout={logout}
+                setReloadAddresses={setReloadAddresses}
+                openModal={openModal}
+              />
             </Grid.Column>
           ))}
         </Grid>
@@ -41,7 +46,16 @@ export default function ListAddress(props) {
 //       );
 
 function Address(props) {
-  const { address } = props;
+  const { address, logout, setReloadAddresses, openModal } = props;
+  const [loadingDelete, setLoadingDelete] = useState(false);
+
+  const deleteAddresses = async () => {
+    setLoadingDelete(true);
+    const response = await deleteAddressApi(address._id, logout);
+    if (response) setReloadAddresses(true);
+    setLoadingDelete(false);
+  };
+
   return (
     <div className="address">
       <p>{address.title}</p>
@@ -52,8 +66,15 @@ function Address(props) {
       </p>
       <p>{address.phone}</p>
       <div className="actions">
-        <Button primary>Editar</Button>
-        <Button>Eliminar</Button>
+        <Button
+          primary
+          onClick={() => openModal(`Editar: ${address.title}`, address)}
+        >
+          Editar
+        </Button>
+        <Button onClick={deleteAddresses} loading={loadingDelete}>
+          Eliminar
+        </Button>
       </div>
     </div>
   );
