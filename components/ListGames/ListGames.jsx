@@ -45,7 +45,6 @@ export default function ListGames(props) {
 
 function Game(props) {
   const { game } = props;
-  console.log(game);
 
   return (
     <Grid.Column className="list-games__game">

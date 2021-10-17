@@ -11,7 +11,6 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       const response = await getLastGamesApi(50);
-      console.log(response);
       if (size(response) > 0) setGames(response);
       else setGames([]);
     })();
