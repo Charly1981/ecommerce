@@ -13,7 +13,9 @@ export default function Game() {
       const response = await getGameByUrlApi(query.game);
       setGame(response[0]);
     })();
-  }, []);
+  }, [query]);
+
+  if (!game) return null;
 
   return (
     <BasicLayout className="game">
