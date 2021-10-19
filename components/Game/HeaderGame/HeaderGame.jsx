@@ -15,8 +15,36 @@ export default function HeaderGame(props) {
         <Image src={poster.url} alt={title} fluid />
       </GridColumn>
       <Grid.Column mobile={16} tablet={10} computer={11}>
-        <p>Info Game</p>
+        <Info game={game} />
       </Grid.Column>
     </Grid>
+  );
+}
+
+function Info(props) {
+  const { game } = props;
+  const { title, summary, price, discount } = game;
+
+  return (
+    <>
+      <div className="header-game__title">
+        {title} <Icon name="heart outline" link />
+      </div>
+      <div className="header-game__delivery">Entrega en 2/48 hs</div>
+      <div
+        className="header-game__summary"
+        dangerouslySetInnerHTML={{ __html: summary }}
+      />
+      <div className="header-game__buy">
+        <div className="header-game__buy-price">
+          <p>Precio de venta al publico: {price}$</p>
+          <div className="header-game__buy-price-actions">
+            <p>-{discount}%</p>
+            <p>{price - Math.floor(price * discount) / 100}$</p>
+          </div>
+        </div>
+        <Button className="header-game__but-btn">Comprar</Button>
+      </div>
+    </>
   );
 }
