@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Image, Icon, Button, GridColumn } from "semantic-ui-react";
 import { size } from "lodash";
+import classNames from "classnames";
+import {
+  isFavoriteApi,
+  addFavoriteApi,
+  deleteFavoriteApi,
+} from "../../../api/favorite";
+import useAuth from "../../../hooks/useAuth";
 
 export default function HeaderGame(props) {
   const { game } = props;
   const { poster, title } = game;
-  console.log(poster.url);
-
-  // console.log(game.poster.url);
 
   return (
     <Grid className="header-game">
@@ -24,11 +28,48 @@ export default function HeaderGame(props) {
 function Info(props) {
   const { game } = props;
   const { title, summary, price, discount } = game;
+  const [isFavorite, setIsFavorites] = useState(false);
+  const { auth, logout } = useAuth();
+  const [reloadFavorite, setReloadFavorite] = useState(false);
+
+  const addFavorite = async () => {
+    if (auth) {
+      await addFavoriteApi(auth.idUser, game.id, logout);
+      setReloadFavorite(true);
+    }
+  };
+
+  const deleteFavorite = async () => {
+    if (auth) {
+      await deleteFavoriteApi(auth.idUser, game.id, logout);
+      setReloadFavorite(true);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      const response = await isFavoriteApi(auth.idUser, game.id, logout);
+      if (size(response) > 0) setIsFavorites(true);
+      else setIsFavorites(false);
+    })();
+    setReloadFavorite(false);
+  }, [game, reloadFavorite]);
 
   return (
     <>
       <div className="header-game__title">
-        {title} <Icon name="heart outline" link />
+        {title}
+        <Icon
+          name={isFavorite ? "heart" : "heart outline"}
+          className={classNames({
+            like: isFavorite,
+          })}
+          link
+          onClick={() => (isFavorite ? deleteFavorite() : addFavorite())}
+          // onClick={
+          //   isFavorite ? console.log("apreta") : console.log("sdfasfasfa")
+          // }
+        />
       </div>
       <div className="header-game__delivery">Entrega en 2/48 hs</div>
       <div
@@ -40,7 +81,7 @@ function Info(props) {
           <p>Precio de venta al publico: {price}$</p>
           <div className="header-game__buy-price-actions">
             <p>-{discount}%</p>
-            <p>{price - Math.floor(price * discount) / 100}$</p>
+            <p>{(price - Math.floor(price * discount) / 100).toFixed(2)}$</p>
           </div>
         </div>
         <Button className="header-game__but-btn">Comprar</Button>
