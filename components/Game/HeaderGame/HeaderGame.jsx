@@ -8,6 +8,7 @@ import {
   deleteFavoriteApi,
 } from "../../../api/favorite";
 import useAuth from "../../../hooks/useAuth";
+import useCart from "../../../hooks/useCart";
 
 export default function HeaderGame(props) {
   const { game } = props;
@@ -27,10 +28,11 @@ export default function HeaderGame(props) {
 
 function Info(props) {
   const { game } = props;
-  const { title, summary, price, discount } = game;
+  const { title, summary, price, discount, url } = game;
   const [isFavorite, setIsFavorites] = useState(false);
   const { auth, logout } = useAuth();
   const [reloadFavorite, setReloadFavorite] = useState(false);
+  const { addProductCart } = useCart();
 
   const addFavorite = async () => {
     if (auth) {
@@ -84,7 +86,12 @@ function Info(props) {
             <p>{(price - Math.floor(price * discount) / 100).toFixed(2)}$</p>
           </div>
         </div>
-        <Button className="header-game__but-btn">Comprar</Button>
+        <Button
+          className="header-game__but-btn"
+          onClick={() => addProductCart(url)}
+        >
+          Comprar
+        </Button>
       </div>
     </>
   );

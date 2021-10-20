@@ -18,7 +18,6 @@ export default function wishlist() {
         forEach(response, (data) => {
           gamesList.push(data.game);
         });
-        console.log(gamesList);
         setGames(gamesList);
       } else {
         setGames([]);
