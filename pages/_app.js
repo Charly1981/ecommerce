@@ -4,7 +4,12 @@ import jwtDecode from "jwt-decode";
 import { useRouter } from "next/router";
 import AuthContext from "../context/AuthContext";
 import { setToken, getToken, removeToken } from "../api/token";
-import { getProductsCart, addProductCart } from "../api/cart";
+import {
+  getProductsCart,
+  addProductCart,
+  countProductsCart,
+  removeProductCart,
+} from "../api/cart";
 import CartContext from "../context/CartContext";
 import "../scss/global.scss";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,7 +19,9 @@ import "slick-carousel/slick/slick-theme.css";
 
 export default function MyApp({ Component, pageProps }) {
   const [auth, setAuth] = useState(undefined);
+  const [totalProductsCart, seTtotalProductsCart] = useState(0);
   const [reloadUser, setReloadUser] = useState(false);
+  const [reloadCart, setReloadCart] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,6 +36,11 @@ export default function MyApp({ Component, pageProps }) {
     }
     setReloadUser(false);
   }, [reloadUser]);
+
+  useEffect(() => {
+    seTtotalProductsCart(countProductsCart());
+    setReloadCart();
+  }, [reloadCart, auth]);
 
   //Funcion que se ejecuta desde cualquier componente, recibe el token y lo setea en el storage
   const login = (token) => {
@@ -59,20 +71,26 @@ export default function MyApp({ Component, pageProps }) {
     const token = getToken();
     if (token) {
       addProductCart(product);
+      setReloadCart(true);
     } else {
       toast.warning("Para comprar un juego tienes que iniciar sesión");
     }
   };
 
+  const removeProduct = (product) => {
+    removeProductCart(product);
+    setReloadCart(true);
+  };
+
   const cartData = useMemo(
     () => ({
-      productsCart: 0,
+      productsCart: totalProductsCart,
       addProductCart: (product) => addProduct(product),
       getProductsCart: getProductsCart,
-      removeProductCart: () => null,
+      removeProductCart: (product) => removeProduct(product),
       removeAllProductsCart: () => null,
     }),
-    []
+    [totalProductsCart]
   );
 
   if (auth === undefined) return null;
