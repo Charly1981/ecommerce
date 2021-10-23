@@ -29,6 +29,7 @@ export default function FormPayment(props) {
     if (result.error) {
       toast.error(result.error.message);
     } else {
+      console.log(auth.idUser);
       const response = await paymentCardApi(
         result.token,
         products,

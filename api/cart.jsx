@@ -63,6 +63,7 @@ export async function paymentCardApi(token, products, idUser, address, logout) {
     delete addressShipping.createdAt;
 
     const url = `${BASE_PATH}/orders`;
+    console.log(idUser);
     const params = {
       method: "POST",
       headers: {
