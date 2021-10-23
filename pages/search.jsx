@@ -6,6 +6,7 @@ import { searchGameApi } from "../api/game";
 import { useRouter } from "next/router";
 import { size } from "lodash";
 import ListGames from "../components/ListGames";
+import Seo from "../components/Seo";
 
 export default function search() {
   const [games, setGames] = useState(null);
@@ -29,6 +30,7 @@ export default function search() {
 
   return (
     <BasicLayout className="search">
+      <Seo title={`Buscando: ${query.query}`} />
       <div className="data">
         {!games && <Loader active>Cargado Juegos</Loader>}
         {games && size(games) === 0 && (
